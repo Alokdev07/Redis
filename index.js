@@ -1,4 +1,4 @@
-import express from 'express'
+import express, {json} from 'express'
 import Redis from 'ioredis'
 
 const app = express()
@@ -48,6 +48,45 @@ async function list() {
 }
 
 // list()
+
+async function add_set(){
+    await client.sadd('ip',1)
+    await client.sadd('ip',2)
+    await client.sadd('ip',3) // to add the element in set
+
+    const length = await client.scard('ip')
+    console.log(`The length of the set is ${length}`)
+
+    for (let i = 0; i < length; i++) {
+        const element = await client.spop('ip')
+        console.log(`element of the set ${element}`)
+    }
+
+    await client.sadd('another_ip',3)
+    await client.sadd('another_ip',4)
+    await client.sadd('another_ip',5)
+
+    const union = await client.sunion('ip','another_ip')
+    console.log(union)
+    const intersection = await client.sinter('ip','another_ip')
+    console.log(intersection)
+} // this is the method of set and we use this in this type
+
+// add_set()
+
+async function hash_map() {
+    await client.hmset('user',{
+        'name' : 'alok',
+        'age' : '22'
+    })
+
+    const result = await client.hget('user', 'name')
+    const all_result = await client.hgetall('user')
+    console.log(`username is ${result} all result are ${JSON.stringify(all_result)}`)
+} // this is how we interact with hashmap there is various method available
+
+// hash_map()
+
 
 app.listen(PORT,() => {
     console.log(`listening on port ${PORT}`)
