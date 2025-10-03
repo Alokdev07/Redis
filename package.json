@@ -5,13 +5,15 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon index.js"
+    "dev": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.12.2",
     "express": "^5.1.0",
     "ioredis": "^1.15.1",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "redis": "^5.8.3"
   }
 }

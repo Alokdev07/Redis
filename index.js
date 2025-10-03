@@ -1,11 +1,14 @@
 import express, {json} from 'express'
 import Redis from 'ioredis'
+import {createClient} from 'redis'
 
 const app = express()
 const PORT = process.env.PORT || 8000
 app.use(express.json())
 
 const client = new Redis()
+const new_client = createClient()
+
 
 
 app.get('/',(req,res) => {
@@ -86,6 +89,26 @@ async function hash_map() {
 } // this is how we interact with hashmap there is various method available
 
 // hash_map()
+
+async function redis_streams() {
+    await new_client.connect();
+
+    // const first_response = new_client.xAdd('temperature:bhadrak','*',{
+    //     'chandbali' : 'hot',
+    //     'tihidi' : 'cold'
+    // })
+
+    const read_data = await new_client.xRead({
+        key: 'temperature:bhadrak',
+        id: '1759472934548-0'
+    }, {
+        COUNT: 100,
+        BLOCK: 300
+    });
+
+    console.log(JSON.stringify(read_data)); // will print Stream ID like "1727954695300-0"
+}
+redis_streams()
 
 
 app.listen(PORT,() => {
